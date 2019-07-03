@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>教师个人信息编辑页</title>
+		<!-- Bootstrap core CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+		<style type="text/css">
+			/* Chart.js */
+			
+			@-webkit-keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			@keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			.chartjs-render-monitor {
+				-webkit-animation: chartjs-render-animation 0.001s;
+				animation: chartjs-render-animation 0.001s;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--引入抽取的topbar-->
+		<div th:replace="teacher/bar::topbar"></div>
+		<div class="container-fluid">
+			<div class="row">
+				<!--引入侧边栏-->
+				<div th:replace="teacher/bar::#sidebar(activeUri='teacher')"></div>
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<form action="staff/info" th:action="@{/teacher/info}" method="post">
+						<!-- 表单发送put请求-->
+						<input type="hidden" name="_method" value="put">
+						<div class="form-group">
+							<!--<label>编号</label>-->
+							<input name="tid" id="tid" type="hidden" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<label>密码</label>
+							<input name="tpassword" id="tpassword" type="text" class="form-control" th:value="${teacher!=null}?${teacher.tpassword}">
+						</div>
+						<div class="form-group">
+							<label>姓名</label>
+							<input name="tname" id="tname" type="text" class="form-control" th:value="${teacher!=null}?${teacher.tname}">
+						</div>
+						<div class="form-group">
+							<label>性别</label><br/>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="tsex" value="0" th:checked="${teacher!=null}?${teacher.tsex==0}">
+								<label class="form-check-label">男</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="tsex" value="1" th:checked="${teacher!=null}?${teacher.tsex==1}">
+								<label class="form-check-label">女</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>年龄</label>
+							<input name="tage" type="text" class="form-control" placeholder="18" th:value="${teacher!=null}?${teacher.tage}">
+						</div>
+						<div class="form-group">
+							<label>电话</label>
+							<input name="tel" type="text" class="form-control" placeholder="18879799797" th:value="${teacher!=null}?${teacher.tel}">
+						</div>
+						<button type="submit" class="btn btn-primary" onclick="return edit()">提交</button>
+					</form>
+				</main>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+		<script th:inline="javascript">
+			function edit() {
+				//密码未填写，弹窗警告
+				if (! document.getElementById("tpassword").value) {
+					alert("请填写密码");
+					return false;
+				}
+
+				//姓名未填写，弹窗警告
+				if (! document.getElementById("tname").value) {
+					alert("请填写姓名");
+					return false;
+				}
+
+				//tid赋值
+				var tid = [[${teacher.tid}]];
+				document.getElementById("tid").value = tid;
+
+			}
+
+		</script>
+
+	</body>
+
+</html>

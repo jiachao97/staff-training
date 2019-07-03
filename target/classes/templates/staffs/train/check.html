@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>员工课程培训信息校验页</title>
+	<!-- Bootstrap core CSS -->
+	<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+	<style type="text/css">
+		/* Chart.js */
+
+		@-webkit-keyframes chartjs-render-animation {
+			from {
+				opacity: 0.99
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		@keyframes chartjs-render-animation {
+			from {
+				opacity: 0.99
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		.chartjs-render-monitor {
+			-webkit-animation: chartjs-render-animation 0.001s;
+			animation: chartjs-render-animation 0.001s;
+		}
+	</style>
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<div th:replace="staffs/bar::topbar"></div>
+<div class="container-fluid">
+	<div class="row">
+		<!--引入侧边栏sidebar-->
+		<div th:replace="staffs/bar::#sidebar(activeUri='trains')"></div>
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+			<form th:action="@{/train}" method="post">
+				<!-- 表单发送put请求-->
+				<input type="hidden" name="_method" value="put">
+				<div class="form-group">
+					<label class="form-inline">
+						<!--<label>员工编号</label>-->
+						<input name="sid" id="sid" type="hidden" readonly class="form-control">
+					</label>
+				</div>
+				<div class="form-group">
+					<label>申请人工号</label>
+					<input name="scode" id="scode" type="text" readonly class="form-control" th:value="${staff!=null}?${staff.scode}">
+				</div>
+				<div class="form-group">
+					<label>申请人姓名</label>
+					<input name="sname" id="sname" type="text" readonly class="form-control" th:value="${staff!=null}?${staff.sname}">
+				</div>
+				<div class="form-group">
+					<label>申请人所属部门</label>
+					<input name="depname" id="depname" type="text" readonly class="form-control" th:value="${staff!=null}?${staff.dept.depname}">
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="form-inline">-->
+						<!--<label>课程编号</label>-->
+						<!--<input name="cid" id="cid" type="hidden" readonly class="form-control">&nbsp;&nbsp;[[${course!=null}?${course.cid}]]-->
+					<!--</label>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label>课程名称</label>
+					<input name="cname" id="cname" type="text" readonly class="form-control" th:value="${course!=null}?${course.cname}">
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="form-inline">-->
+						<!--<label>教师编号</label>-->
+						<!--<input name="teacher.tid" id="tid" type="hidden" readonly class="form-control">&nbsp;&nbsp;[[${course!=null}?${course.teacher.tid}]]-->
+					<!--</label>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label>培训教师</label>
+					<input id="tname" name="tname" type="text" readonly class="form-control" th:value="${course!=null}?${course.teacher.tname}">
+				</div>
+				<div class="form-group">
+					<label>培训教材</label>
+					<input name="cbook" id="cbook" type="text" readonly class="form-control" th:value="${course!=null}?${course.cbook}">
+				</div>
+				<!--<label>课程状态</label>-->
+				<input name="cstate" id="cstate" type="hidden" readonly class="form-control">
+				<button type="submit" class="btn btn-primary" onclick="return edit()">确认培训</button>
+			</form>
+		</main>
+	</div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+	feather.replace()
+</script>
+<script th:inline="javascript">
+	function edit() {
+		// //sid赋值
+		// var sid = [[${staff.sid}]];
+		// document.getElementById("sid").value = sid;
+		//
+		// //cid赋值
+		// var cid = [[${course.cid}]];
+		// document.getElementById("cid").value = cid;
+		// // alert(cid);
+		//
+		// //tid赋值
+		// var tid = [[${course.teacher.tid}]];
+		// document.getElementById("tid").value = tid;
+
+		//cstate赋值（0:培训中?1:培训结束）
+		document.getElementById("cstate").value = 0;
+		// var cs = document.getElementById("cstate").value;
+		// alert(cs);
+	}
+
+</script>
+
+</body>
+
+</html>

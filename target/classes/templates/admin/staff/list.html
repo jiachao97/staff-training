@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>员工个人信息管理页面</title>
+		<!-- Bootstrap core CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+		<style type="text/css">
+			/* Chart.js */
+			
+			@-webkit-keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			@keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			.chartjs-render-monitor {
+				-webkit-animation: chartjs-render-animation 0.001s;
+				animation: chartjs-render-animation 0.001s;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--引入顶部栏topbar-->
+		<div th:replace="admin/bar::topbar"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!--引入侧边栏sidebar-->
+				<!-- activeUri：侧边栏选中高亮 -->
+				<div th:replace="admin/bar::#sidebar(activeUri='staffs')"></div>
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<h2><a class="btn btn-sm btn-success" href="staff" th:href="@{/staff}">添加员工</a></h2>
+					<div class="table-responsive">
+						<table class="table table-striped table-sm">
+							<thead>
+								<tr>
+									<th>工号</th>
+									<th>姓名</th>
+									<th>性别</th>
+									<th>年龄</th>
+									<th>电话</th>
+									<th>所属部门</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list:${page.content}">
+									<td>[[${list.scode}]]</td>
+									<td>[[${list.sname}]]</td>
+									<td th:text="${list.sex}==0?'男':'女'"></td>  <!-- 三元运算-->
+									<td>[[${list.sage}]]</td>
+									<td>[[${list.stel}]]</td>
+									<td>[[${list.dept.depname}]]</td>
+									<!--<td th:text="${#dates.format(emp.birth, 'yyyy-MM-dd HH:mm')}"></td>-->
+									<td>
+										<a class="btn btn-sm btn-primary" th:href="@{/staff/}+${list.sid}">编辑</a>
+										<button th:attr="del_uri=@{/staff/}+${list.sid}" class="btn btn-sm btn-danger deleteBtn">删除</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div>
+							<a th:href="@{/staffs(start=0)}">[首页]</a>&nbsp;&nbsp;
+							<a th:if="${not page.isFirst()}" th:href="@{/staffs(start=${page.number-1})}">[上一页]</a>&nbsp;&nbsp;
+							<a th:if="${not page.isLast()}" th:href="@{/staffs(start=${page.number+1})}">[下一页]</a>&nbsp;&nbsp;
+							&nbsp;&nbsp;当前：第<td th:text="${page.getNumber()+1}"></td>页
+							&nbsp;&nbsp;共<td th:text="${page.getTotalPages()}"></td>页
+							&nbsp;&nbsp;共<td th:text="${page.getTotalElements()}"></td>条记录
+						</div>
+					</div>
+				</main>
+				<!-- 提交delete请求-->
+				<form id="deleteStaffForm"  method="post">
+					<input type="hidden" name="_method" value="delete"/>
+				</form>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+		<script>
+			$(".deleteBtn").click(function(){
+			    //删除当前员工信息
+			    $("#deleteStaffForm").attr("action",$(this).attr("del_uri")).submit();
+			    alert("已删除");
+			    return false;
+            });
+		</script>
+	</body>
+</html>

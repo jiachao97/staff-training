@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>员工个人信息编辑页</title>
+		<!-- Bootstrap core CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+		<style type="text/css">
+			/* Chart.js */
+			
+			@-webkit-keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			@keyframes chartjs-render-animation {
+				from {
+					opacity: 0.99
+				}
+				to {
+					opacity: 1
+				}
+			}
+			
+			.chartjs-render-monitor {
+				-webkit-animation: chartjs-render-animation 0.001s;
+				animation: chartjs-render-animation 0.001s;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--引入抽取的topbar-->
+		<div th:replace="staffs/bar::topbar"></div>
+		<div class="container-fluid">
+			<div class="row">
+				<!--引入侧边栏-->
+				<div th:replace="staffs/bar::#sidebar(activeUri='staffs')"></div>
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<form action="staff/info" th:action="@{/staff/info}" method="post">
+						<!-- 表单发送put请求-->
+						<input type="hidden" name="_method" value="put">
+						<div class="form-group">
+							<br>
+							<!-- 工号scode=部门类别编号+员工自增编号  eg：E65535 -->
+							<label class="form-inline">工号</label>
+							<label class="form-inline">
+								<!-- 部门类别编号-->
+								<input id="depid" name="dept.depid" type="text" style="text-align: center" readonly class="form-control" th:value="${staff!=null}?${staff.dept.depid}">
+								<!-- 员工编号-->
+								<input name="sid" id="sid" type="hidden" readonly class="form-control">&nbsp;&nbsp;[[${staff!=null}?${staff.sid}]]
+							</label>
+						</div>
+
+						<!-- js拼接depid和sid后，隐式的提交scode值-->
+						<div class="form-group">
+							<!-- 工号scode=部门类别编号+员工自增编号  eg：E65535 -->
+							<input name="scode" id="scode" type="hidden" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<label>密码</label>
+							<input name="spassword" id="spassword" type="text" class="form-control" th:value="${staff!=null}?${staff.spassword}">
+						</div>
+						<div class="form-group">
+							<label>姓名</label>
+							<input name="sname" id="sname" type="text" class="form-control" th:value="${staff!=null}?${staff.sname}">
+						</div>
+						<div class="form-group">
+							<label>性别</label><br/>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sex" value="0" th:checked="${staff!=null}?${staff.sex==0}">
+								<label class="form-check-label">男</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="sex" value="1" th:checked="${staff!=null}?${staff.sex==1}">
+								<label class="form-check-label">女</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>年龄</label>
+							<input name="sage" type="text" class="form-control" placeholder="18" th:value="${staff!=null}?${staff.sage}">
+						</div>
+						<div class="form-group">
+							<label>电话</label>
+							<input name="stel" type="text" class="form-control" placeholder="18879799797" th:value="${staff!=null}?${staff.stel}">
+						</div>
+						<button type="submit" class="btn btn-primary" onclick="return edit()">提交</button>
+					</form>
+				</main>
+			</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+		<script th:inline="javascript">
+			function edit() {
+				//密码未填写，弹窗警告
+				if (! document.getElementById("spassword").value) {
+					alert("请填写密码");
+					return false;
+				}
+
+				//姓名未填写，弹窗警告
+				if (! document.getElementById("sname").value) {
+					alert("请填写姓名");
+					return false;
+				}
+
+				//获取depid
+				var depid = [[${staff.dept.depid}]];
+				document.getElementById("depid").value = depid;
+				// alert(depid);
+				//获取sid
+				var sid = [[${staff.sid}]];
+				document.getElementById("sid").value = sid;
+				// alert(sid);
+				//拼接depid和sid，并赋值给scode
+				document.getElementById("scode").value = depid + sid;
+				// alert(depid + sid);
+
+			}
+
+		</script>
+
+	</body>
+
+</html>
